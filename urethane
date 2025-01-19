@@ -1,0 +1,77 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/arpex-scripts/clogbypasser/refs/heads/main/loader", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AnthonyIsntHere/anthonysrepository/main/scripts/AntiChatLogger.lua", true))()
+
+local function createGUI()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    local frame = Instance.new("Frame")
+    frame.Parent = screenGui
+    frame.Size = UDim2.new(0, 350, 0, 300)
+    frame.Position = UDim2.new(0.5, -175, 0.5, -150)
+    frame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    frame.Active = true
+    frame.Draggable = true
+
+    local textBox = Instance.new("TextBox")
+    textBox.Parent = frame
+    textBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+    textBox.Position = UDim2.new(0.1, 0, 0.1, 0)
+    textBox.PlaceholderText = "Enter text here"
+    textBox.Text = ""
+    textBox.TextScaled = true
+    textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = frame
+    textLabel.Size = UDim2.new(0.8, 0, 0.2, 0)
+    textLabel.Position = UDim2.new(0.1, 0, 0.4, 0)
+    textLabel.Text = "ik ui is shit im workin on it"
+    textLabel.TextScaled = true
+    textLabel.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+    textLabel.TextWrapped = true
+
+    local chatButton = Instance.new("TextButton")
+    chatButton.Parent = frame
+    chatButton.Size = UDim2.new(0.4, 0, 0.15, 0)
+    chatButton.Position = UDim2.new(0.3, 0, 0.7, 0)
+    chatButton.Text = "Send to Chat"
+    chatButton.TextScaled = true
+    chatButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
+
+    local function convertText(input)
+        local charMap = {
+            A="Ạ͎", B="Ḅ͎", C="C͎", D="Ḍ͎", E="Ẹ͎", F="F͎", G="Ģ͎", H="Ḥ͎", I="Ị͎", J="J͎", K="Ḳ͎", L="Ḷ͎",
+            M="Ṃ͎", N="Ṇ͎", O="Ọ͎", P="Р͎", Q="Q͎", R="Ṛ͎", S="Ṣ͎", T="Ṭ͎", U="Ụ͎", V="Ṿ͎", W="Ẉ͎", X="Ẋ͎",
+            Y="Ỵ͎", Z="Ẓ͎", a="ạ͎", b="ḅ͎", c="с͎", d="ḍ͎", e="ẹ͎", f="f͎", g="ɡ͎", h="ḥ͎", i="ị͎", j="ј͎", k="ḳ͎",
+            l="ḷ͎", m="ṃ͎", n="ṇ͎", o="ọ͎", p="р͎", q="q͎", r="ṛ͎", s="ṣ͎", t="ṭ͎", u="ụ͎", v="ṿ͎", w="ẉ͎", x="ẋ͎",
+            y="ỵ͎", z="ẓ͎", ["1"]="1͎", ["2"]="2͎", ["3"]="3͎", ["4"]="4͎", ["5"]="5͎", ["6"]="6͎", ["7"]="7͎", ["8"]="8͎",
+            ["9"]="9͎", ["0"]="0͎", ["!"]="!͎", ["?"]="?͎"
+        }
+        
+        return input:gsub(".", function(c)
+            return charMap[c] or c
+        end)
+    end
+
+    chatButton.MouseButton1Click:Connect(function()
+        local userInput = textBox.Text
+        if userInput ~= "" then
+            local convertedText = convertText(userInput)
+            textLabel.Text = convertedText
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(convertedText, "All")
+        else
+            warn("No text entered.")
+        end
+    end)
+
+    textBox:GetPropertyChangedSignal("Text"):Connect(function()
+        textLabel.Text = convertText(textBox.Text)
+    end)
+end
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+    createGUI()
+end)
+
+createGUI()
